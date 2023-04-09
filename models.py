@@ -1,4 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
+
 db = SQLAlchemy()
 
 
@@ -29,3 +31,27 @@ class User (db.Model):
 
     image_url = db.Column(
         db.String, default='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStvZlb5voYlK89uQ022tB03USKvRGNouLJJw&usqp=CAU')
+
+    # Part Two : Adding posts
+
+
+class Post(db.Model):
+
+    '''Post'''
+    __tablename__ = "posts"
+
+    id = db.Column(db.Integer,
+                   primary_key=True,
+                   autoincrement=True)
+    title = db.Column(db.Text,
+                      nullable=False)
+    content = db.Column(db.Text,
+                        nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True),
+                           default=func.now())
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    def __repr__(self):
+        p = self
+        return f"<Post {p.id} {p.title} {p.content} {p.created_at} {p.user_id}"

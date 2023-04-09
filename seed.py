@@ -3,7 +3,8 @@
 
 
 # Create all tables
-from models import User, db
+import datetime
+from models import User, db, Post
 from app import app
 db.drop_all()
 db.create_all()
@@ -24,4 +25,9 @@ db.session.add(minki)
 db.session.add(joel)
 
 # Commit--otherwise, this never gets saved!
+db.session.commit()
+
+post1 = Post(title='Music', content='Music is life',
+             user_id=2)
+db.session.add(post1)
 db.session.commit()
