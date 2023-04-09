@@ -1,7 +1,21 @@
+
+form {
+    display: inline;
+}
+
 h1 {
     color: brown;
 }
 
-div .container { 
-    margin-top: 60px;
+.align-button {
+    display : flex
+}
+
+
+.first-button, .second-button, .third-button, .fourth-button{
+    display: flex;
+}
+
+.button {
+    display: inline;
 }

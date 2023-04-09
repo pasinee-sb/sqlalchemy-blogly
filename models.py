@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+
 from sqlalchemy.sql import func
 
 db = SQLAlchemy()
@@ -31,7 +32,8 @@ class User (db.Model):
 
     image_url = db.Column(
         db.String, default='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStvZlb5voYlK89uQ022tB03USKvRGNouLJJw&usqp=CAU')
-
+    posts = db.relationship(
+        'Post', cascade="all, delete-orphan")
     # Part Two : Adding posts
 
 
@@ -50,7 +52,9 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime(timezone=True),
                            default=func.now())
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'users.id'))
+    user = db.relationship('User', overlaps="posts")
 
     def __repr__(self):
         p = self

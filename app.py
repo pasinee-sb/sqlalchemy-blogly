@@ -2,7 +2,7 @@
 
 from flask import Flask, request, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User
+from models import db, connect_db, User, Post
 
 app = Flask(__name__)
 app.app_context().push()
@@ -61,12 +61,16 @@ def create_user():
 def show_user(user_id):
     """Show detail of user"""
     user = User.query.get_or_404(user_id)
-    return render_template('detail.html', user=user)
+    posts = user.posts
+
+    # posts = posts.all() if posts else None
+    return render_template('userdetail.html', user=user, posts=posts)
 
 
 @app.route('/users/<int:user_id>/edit')
 def edit(user_id):
     user = User.query.get_or_404(user_id)
+
     return render_template('edit.html', user=user)
 
 
@@ -100,3 +104,55 @@ def new_post(user_id):
     user = User.query.get_or_404(user_id)
 
     return render_template('addpost.html', user=user)
+
+
+@app.route('/users/<int:user_id>/posts/new', methods=['POST'])
+def post(user_id):
+
+    title = request.form['title']
+    content = request.form['content']
+    post = Post(title=title, content=content, user_id=user_id)
+    db.session.add(post)
+    db.session.commit()
+
+    return redirect(f'/posts/{post.id}')
+
+
+@app.route('/posts/<int:post_id>')
+def show_post(post_id):
+    post = Post.query.get_or_404(post_id)
+
+    return render_template('postdetail.html', post=post)
+
+
+@app.route('/posts/<int:post_id>/edit')
+def post_edit(post_id):
+
+    post = Post.query.get_or_404(post_id)
+    return render_template('postedit.html', post=post)
+
+
+@app.route('/posts/<int:post_id>/edit', methods=['POST'])
+def show_post_edit(post_id):
+
+    title = request.form['title']
+    content = request.form['content']
+    post = Post.query.get_or_404(post_id)
+    post.title = title
+    post.content = content
+
+    db.session.commit()
+
+    return redirect(f'/posts/{post.id}')
+
+
+@app.route('/posts/<int:post_id>/delete', methods=['POST'])
+def delete_post(post_id):
+
+    post = Post.query.get_or_404(post_id)
+    user = post.user_id
+
+    Post.query.filter(Post.id == post_id).delete()
+    db.session.commit()
+
+    return redirect(f'/users/{user}')
