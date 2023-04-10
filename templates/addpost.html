@@ -26,6 +26,14 @@
                         
                 
                 </div>
+                <div  class="container tag-section">
+
+                    {%for tag in tags%}
+
+                    <p><input type="checkbox" name ="tags" value="{{tag.tag_id}}">{{tag.tag_name}}</p>
+                    {%endfor%}
+    
+            </div>
                 <button  class="btn btn-primary ">Submit</button> 
         </form>
     </div>

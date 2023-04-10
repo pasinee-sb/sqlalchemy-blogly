@@ -55,7 +55,45 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(
         'users.id'))
     user = db.relationship('User', overlaps="posts")
+    # tags = db.relationship('PostTag', overlaps="posts")
+    post_tags = db.relationship('PostTag', backref="tag_posts")
+
+    tags = db.relationship('Tag', secondary="post_tag", overlaps="post_tags")
 
     def __repr__(self):
         p = self
-        return f"<Post {p.id} {p.title} {p.content} {p.created_at} {p.user_id}"
+        return f"<Post {p.id} {p.title} {p.content} {p.created_at} {p.user_id}>"
+
+
+class Tag (db.Model):
+    '''Tag'''
+    __tablename__ = "tags"
+
+    tag_id = db.Column(db.Integer,
+                       primary_key=True,
+                       autoincrement=True)
+    tag_name = db.Column(db.Text, unique=True)
+
+    # posts = db.relationship('PostTag', overlaps="tags")
+    post_tags = db.relationship('PostTag', backref="tags")
+
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
+
+    posts = db.relationship('Post', secondary="post_tag",
+                            overlaps="post_tags,tags")
+
+    def __repr__(self):
+        t = self
+        return f"<Tag {t.tag_id} {t.tag_name} >"
+
+
+class PostTag (db.Model):
+    '''PostTag'''
+    __tablename__ = "post_tag"
+
+    post_id = db.Column(db.Integer, db.ForeignKey(
+        'posts.id'), primary_key=True)
+    tag_id = db.Column(db.Integer, db.ForeignKey(
+        'tags.tag_id'), primary_key=True)
+
+    tag_role = db.Column(db.Text)

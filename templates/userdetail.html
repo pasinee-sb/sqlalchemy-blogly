@@ -9,42 +9,38 @@
     <title>Document</title>
 </head>
 <body>
-<div class="container" style="margin-top: 50px;">
-    <div class="card" style="width: 25rem;"> 
-    <img src="{{user.image_url}}" alt="">
 
-    <h1> {{user.first_name}} {{user.last_name}}</h1>
-    <div class="align-button">
-        <div class="first-buttton">
+  <div class="container">
 
-        <form action="/users/{{user.id}}/edit"><button  class="btn btn-primary">Edit</button></form>
+    <div class="container">
 
-    </div>
-    <div class="second-buttton">
+        <img src="{{user.image_url}}" alt="">
+        <h1> {{user.first_name}} {{user.last_name}}</h1>
 
-        <form action="/users/{{user.id}}/delete" method="post"><button  class="btn btn-danger"> Delete</button></form>
-    </div>
+        </div>
+        <div class="container">
 
-
-    <div class="third-buttton">
-
-        <form action="/users/{{user.id}}/posts/new"><button class="btn btn-primary">Add Post</button></form>
-    </div>
-    <div class="fourth-buttton">
-
-        <form action="/"><button  class="btn btn-success">Home</button></form>
-       </div>
+        <form action="/users/{{user.id}}/edit"><button class="btn btn-primary" >Edit</button></form>
+        <form action="/users/{{user.id}}/delete" method="post"><button class="btn btn-danger" > Delete</button></form>
+     
+       
     
     </div>
    
 
-<div class="container">
-<ul>{% for post in posts %}
-<a href="/posts/{{post.id}}"><li>{{post.title}}</li></a>
-{% endfor%}
-</ul>
-</div>
-</div>
+    <div class="container">
+        <h2>{{user.first_name}}'s posts</h2>
+        <ul>{% for post in posts %}
+        <a href="/posts/{{post.id}}"><li>{{post.title}}</li></a>
+        {% endfor%}
+        </ul>
+        
+        <form action="/users/{{user.id}}/posts/new"><button class="btn btn-success">Add Post</button></form>
+        <form action="/"><button class="btn btn-primary">Home</button></form>
+    </div>
+
+ 
+
 </div>
 </body>
 </html>
